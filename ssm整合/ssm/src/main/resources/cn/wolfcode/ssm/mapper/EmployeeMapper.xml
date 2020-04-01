@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wolfcode.ssm.mapper.EmployeeMapper">
+	<resultMap id="BaseResultMap" type="cn.wolfcode.ssm.domain.Employee">
+		<id column="id" property="id" />
+		<result column="username" property="username" />
+		<result column="password" property="password" />
+		<result column="admain" property="admain" />
+		<result column="email" property="email" />
+	</resultMap>
+	<sql id="Base_Code">
+		<where>
+			<if test="str != null and str !=''">
+				AND username like concat("%",#{str},"%") or email like
+				concat("%",#{str},"%")
+			</if>
+		</where>
+	</sql>
+	<delete id="deleteByPrimaryKey">
+		delete from employee
+		where id = #{id}
+	</delete>
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true">
+		insert
+		into employee (username, password, admain, email)
+		values (#{username},
+		#{password}, #{admain}, #{email})
+	</insert>
+	<update id="updateByPrimaryKey">
+		update employee
+		set username = #{username},
+		admain =
+		#{admain},
+		email = #{email}
+		where id = #{id}
+	</update>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap">
+		select id, username,
+		password, admain, email
+		from employee
+		where id = #{id}
+	</select>
+	<select id="selectAll" resultMap="BaseResultMap">
+		select id, username, password,
+		admain, email
+		from employee
+	</select>
+
+	<select id="queryForCount" resultType="int">
+		select count(*) from employee
+		<include refid="Base_Code" />
+	</select>
+
+	<select id="queryForList" resultMap="BaseResultMap">
+		select id, username, password, admain, email from employee
+		<include refid="Base_Code" />
+		limit #{beginIndex},#{pageSize}
+	</select>
+
+	<select id="login" resultMap="BaseResultMap">
+		select id, username, admain from employee where username=#{username} and password=#{password}
+	</select>
+</mapper>

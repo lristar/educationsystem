@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<mvc:default-servlet-handler />
+	<!-- spring组件注解扫描 -->
+	<context:component-scan base-package="cn.wolfcode.ssm" />
+	<!-- mvc注解驱动 -->
+	<mvc:annotation-driven />
+	<!-- mvc视图解析器配置 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/view/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<context:property-placeholder location="classpath:db.properties" />
+	<!-- 连接数据库连接池 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		init-method="init" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="jdbc:mysql:///login" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+
+	<!-- 获取sqlSessionFactory -->
+	<bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath:cn/wolfcode/ssm/mapper/*Mapper.xml" />
+	</bean>
+
+	<!-- mapper文件扫描 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="cn.wolfcode.ssm.mapper" />
+	</bean>
+
+	<!-- 事务配置 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 事务增强 -->
+	<tx:advice id="tx" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="query*" read-only="true" />
+			<tx:method name="list*" read-only="true" />
+			<tx:method name="select*" read-only="true" />
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice>
+
+	<!-- aop配置 -->
+	<aop:config>
+		<aop:pointcut
+			expression="execution(* cn.wolfcode.ssm.service.impl.*ServiceImpl.*(..))"
+			id="pc" />
+		<!-- when + where -->
+		<aop:advisor advice-ref="tx" pointcut-ref="pc" />
+	</aop:config>
+
+	<!-- 注册拦截器 -->
+	<mvc:interceptors>
+		<!-- 注册1个拦截器 -->
+		<mvc:interceptor>
+			<!-- 对哪些资源起拦截作用 -->
+			<mvc:mapping path="/**" />
+			<!-- 对哪些资源不起拦截作用 -->
+			<mvc:exclude-mapping path="/login.do" />
+			<!-- 哪个Bean是拦截器 -->
+			<bean class="cn.wolfcode.ssm.web.interceptor.CheckLoginInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+</beans>
