@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/jquery.validate.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <style>
+        #adminstu{
+             width: 800px;
+            height: 700px;
+            float:right;
+            padding-right: 250px;
+            padding-top: 20px;
+            margin-top: 60px;
+        }
+        .zhuxian{
+            width: 1200px;
+            margin: 0 auto;
+        }
+        .biaoti{
+            float: left;
+            width: 298px;
+            height: 1000px;
+        }
+    </style>
+    <script>
+        $(function(){
+            $(".biaoti").load("zuobiankuang.html");
+        })
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var page={
+                "pageNum":1,
+                "pageSize":4
+            };
+            $.ajax({
+                url:"/admin/vedio/findshow",
+                type:"get",
+                data:page,
+                dataType:"json",
+                contentType:"application/json;charset=utf-8",
+                async:true,
+                success:function (data) {
+                    var pageInfo=eval(data);
+                    var tbody=$('<tbody></tbody>');
+                    $(pageInfo.list).each(function (index) {
+                        var val=pageInfo.list[index];
+                        var tr=$('<tr></tr>');
+                        tr.append('<td>'+val.title+'</td>'+'<td>'+val.content+'</td>'+'<td>'+val.shijian+'</td>'+'<td>' +'<button type="button" class="btn btn-outline-warning" onclick="del('+val.id+')">delete</button>'+'</td>');
+                        tbody.append(tr);
+                    });
+                    $("#vedioshow tbody").replaceWith(tbody);
+                }
+            });
+        });
+        function del(id){
+            var taskid=id;
+            var url="";
+            if(taskid!=null){
+                url="/admin/vedio/del";
+            }
+            $.ajax({
+                url:url,
+                type:"get",
+                data:{id:taskid},
+                dataType:"json",
+                success:function(data){
+                    if(data.msg==="删除成功"){
+                        alert(data.msg);
+                        location.href="adminvedio.html";
+                    }
+                    else{
+                        alert(data.msg);
+                    }
+                }
+
+
+            });
+        }
+
+    </script>
+</head>
+
+<body>
+<div class="zhuxian">
+
+    <!--引入左标题-->
+    <div class="biaoti"></div>
+
+    <div id="adminstu">
+        <table class="table table-bordered" id="vedioshow" style="width: 700px">
+            <thead>
+            <tr>
+                <th scope="col">名称</th>
+                <th scope="col">相关内容</th>
+                <th scope="col">发布时间</th>
+                <th width="50px" scope="col">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        <div><button type="button" class="btn btn-outline-success">Add</button></div>
+        <div>
+            <nav aria-label="...";">
+            <ul class="pagination">
+     <li><a href="#">&laquo;</a></li>
+     <li><a href="#">1</a></li>
+     <li><a href="#">2</a></li>
+     <li><a href="#">3</a></li>
+     <li><a href="#">4</a></li>
+     <li><a href="#">5</a></li>
+     <li><a href="#">&raquo;</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+</body>
+</html>

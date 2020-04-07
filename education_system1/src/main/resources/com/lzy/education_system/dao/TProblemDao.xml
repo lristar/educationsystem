@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzy.education_system.dao.TProblemDao">
+
+    <insert id="TProblemAdd">
+        insert into t_timu values(#{tProblem.id},#{tProblem.name},#{tProblem.xuanxianga},#{tProblem.xuanxiangb},#{tProblem.xuanxiangc},#{tProblem.xuanxiangd},#{tProblem.daan},#{tProblem.fenshu},#{tProblem.del},#{tProblem.type})
+    </insert>
+    <select id="TProblemFindAll" resultType="com.lzy.education_system.domain.TProblem">
+        select * from t_timu where del='no'
+    </select>
+    <select id="TProblemFindById" resultType="com.lzy.education_system.domain.TProblem">
+        select * from t_timu where id= #{id}
+    </select>
+    <update id="TProblemDel">
+        update t_timu set del='yes' where id= #{id}
+    </update>
+    <select id="TProblemNumber" resultType="int">
+        select count(*) from t_timu where type=#{type}
+    </select>
+</mapper>

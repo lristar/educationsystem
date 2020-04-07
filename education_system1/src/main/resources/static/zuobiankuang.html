@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/3.4.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css">
+    <style>
+        .nav{
+            width: 250px;
+            height: 700px;
+            border-right: 2px solid  #267d77;
+        }
+        .header{
+            height: 40px;
+            width: auto;
+            background-color: #c0e3e1;
+            text-align: center;
+            line-height: 40px;
+        }
+        .biaoti{
+            height: 35px;
+            width: 280px;
+            margin-top: 10px;
+        }
+        .tubiao{
+            text-align: center;
+            display: inline-block;
+            height: 30px;
+            width:25px;
+            background-image: url('img/tubiao.png');
+            background-position: -2px 10px;
+            background-repeat: no-repeat;
+        }
+        .wenzi{
+            display: inline-block;
+            color:  #267d77;
+        }
+         .zhuxian{
+            width: 1200px;
+            margin: 0 auto;
+            }
+            .header01{
+            	height: 30px;
+                width: auto;
+            	
+            }
+            #adminloginmes{
+            	float: right;
+            }
+          .houtainame{
+          	
+          }
+            
+    </style>
+    <script type="text/javascript">
+    	function sure() {
+var conf = confirm("是否注销？");
+if(conf == true) {
+return true;
+} else {
+return false;
+}
+}
+    	
+    </script>
+</head>
+<body>
+ <div class="container">
+	<div class="zhuxian">
+		<div class="header01">
+			<div class="houtainame">
+				<strong>教学辅助系统后台</strong>
+				<div id="adminloginmes">
+			<p>欢迎您：系统管理员</p>
+				<a href="zhuyou.html" onclick="return sure()">注销系统</a>
+			</div>
+			
+			</div>
+			
+		</div>
+    <div class="nav">
+        <div class="header">
+            <strong style="color: #267d77;">功能菜单</strong>
+        </div>
+        <div class="biaoti">
+            <div class="tubiao" ></div>
+            <a href="adminPwEdit.html"><span class="wenzi" >修改管理员密码</span></a>
+        </div>
+        <div class="biaoti">
+            <div class="tubiao" ></div>
+            <a href="adminprofessions.html"><span class="wenzi" >专业信息管理</span></a>
+        </div>
+        <div class="biaoti">
+            <div class="tubiao" ></div>
+            <a href="adminclass.html"><span class="wenzi" >班级信息管理</span></a>
+        </div>
+        <div class="biaoti">
+            <div class="tubiao" ></div>
+            <a href="admintea.html"><span class="wenzi" >老师信息管理</span></a>
+        </div>
+        <div class="biaoti">
+            <div class="tubiao" ></div>
+            <a href="adminstu.html"><span class="wenzi" >学生信息管理</span></a>
+        </div>
+        <div class="biaoti">
+            <div class="tubiao" ></div>
+            <a href="admingonggao.html"><span class="wenzi" >系统公告管理</span></a>
+        </div>
+        <div class="biaoti">
+            <div class="tubiao" ></div>
+            <a href="adminmessage.html"><span class="wenzi" >&nbsp;留言板信息管理</span></a>
+        </div>
+        <div class="biaoti">
+            <div class="tubiao" ></div>
+            <a href="adminTask.html"><span class="wenzi" >教学资料管理</span></a>
+        </div>
+        <div class="biaoti">
+            <div class="tubiao" ></div>
+            <a href="adminvedio.html"><span class="wenzi" >教学视频管理</span></a>
+        </div>
+        <div class="biaoti">
+            <div class="tubiao" ></div>
+            <a href="adminproblem.html"><span class="wenzi" >资料题目管理</span></a>
+        </div>
+    </div>
+    </div>
+    </div>
+</body>
+</html>

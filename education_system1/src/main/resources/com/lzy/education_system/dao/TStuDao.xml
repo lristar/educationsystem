@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzy.education_system.dao.TStuDao">
+    <select id="TStulogin" resultType="com.lzy.education_system.domain.TStu">
+        select *from t_stu where xuehao=#{xuehao} and loginpw=#{loginpw}
+    </select>
+    <insert id="TStuAdd">
+        insert into t_stu value(#{tStu.id},#{tStu.xuehao},#{tStu.name},#{tStu.sex},#{tStu.age},#{tStu.banji_id},#{tStu.ruxueshijian},#{tStu.del},#{tStu.loginpw})
+    </insert>
+    <update id="TStuDel">
+        update t_stu set del='yes' where id=#{id}
+    </update>
+    <select id="TStuAll" resultType="com.lzy.education_system.domain.TStu">
+        select *from t_stu where del='no'
+    </select>
+    <select id="TStuFindbyxuehao" resultType="com.lzy.education_system.domain.TStu">
+        select * from t_stu where del='no' and xuehao= #{xuehao}
+    </select>
+    <select id="TStuFindbyId" resultType="com.lzy.education_system.domain.TStu">
+        select *from t_stu where id=#{id}
+    </select>
+
+</mapper>

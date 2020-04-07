@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzy.education_system.dao.TTaskDao">
+    <insert id="TTaskAdd">
+        insert into t_zuoye values(#{tTask.id},#{tTask.mingcheng},#{tTask.fujian},#{tTask.fujianYuanshiming},#{tTask.shijian},#{tTask.del})
+    </insert>
+    <update id="TTaskDel">
+        update t_zuoye set del='yes' where id=#{id}
+    </update>
+    <select id="TTaskFindAll" resultType="com.lzy.education_system.domain.TTask">
+        select * from t_zuoye where del='no'
+    </select>
+    <select id="TTaskFindOne" resultType="com.lzy.education_system.domain.TTask">
+        select * from t_zuoye where del='no'and id= #{id}
+    </select>
+</mapper>

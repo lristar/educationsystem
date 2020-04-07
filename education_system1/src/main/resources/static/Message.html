@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>平台留言</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+</head>
+<style>
+    #adminstu{
+        width: 800px;
+        height: 700px;
+        float:left;
+        padding-left: 350px;
+        padding-top: 20px;
+        margin-top: 60px;
+    }
+    #usermes{
+        height: 100px;
+        width:800px;
+    }
+    #user{
+        padding-top: 60px;
+        float: right;
+        height: 50px;
+    }
+</style>
+<!--显示用户名-->
+<script>
+    $(function () {
+      let type=sessionStorage.getItem("usertype");
+      let id=sessionStorage.getItem("userid");
+      let name=sessionStorage.getItem("username");
+      let div=$('<div id="user"></div>');
+      div.append('<p>'+name+'</p>');
+      $("#usermes div").replaceWith(div);
+    })
+</script>
+    <script type="text/javascript">
+        $(function () {
+            let page={
+                "pageNum":1,
+                "pageSize":4
+            };
+            $.ajax({
+                url:"/qiantai/mes/findshow",
+                type:"get",
+                data:page,
+                dataType:"json",
+                contentType:"application/json;charset=utf-8",
+                async:true,
+                success:function (data) {
+                    let pageInfo=eval(data);
+                    let tbody=$('<tbody></tbody>');
+                    $(pageInfo.list).each(function (index) {
+                        let val=pageInfo.list[index];
+                        let tr1=$('<tr></tr>');
+                        let tr2=$('<tr></tr>');
+                        let tr3=$('<tr></tr>');
+                        let div=$('<tr></tr>');
+                        tr3.append('<p>~ ~~ </p>');
+                        tr1.append('<td width="50px">'+val.title+'</td>');
+                        tr2.append('<td>'+val.user_name+'</td>'+'<td height="50px" rowspan="2">'+val.content+'</td>'+'<td>'+val.shijian+'</td>');
+                        div.append('<td>-- -- -- -- -- -- -- -- -- --  </tr>');
+                        tbody.append(tr1);
+                        tbody.append(tr3);
+                        tbody.append(tr2);
+                        tbody.append(div);
+                    });
+                    $("#messageshow tbody").replaceWith(tbody);
+                }
+            });
+        });
+</script>
+<body bgcolor="#6495ed">
+<div class="container">
+  <div class="row">
+      <div id="usermes">
+          <div id="user">
+          <p>dsadsadsadsadsa</p>
+          </div>
+      </div>
+<div id="adminstu">
+    <table  frame="void" id="messageshow" style="width: 700px">
+        <thead>
+        <tr>
+<!--            <th scope="col" rowspan="3">名称</th>-->
+<!--            <th width="50px" scope="col">介绍</th>-->
+<!--            <th width="80px" scope="col">操作</th>-->
+        </tr>
+        </thead>
+        <tbody>
+
+
+        </tbody>
+    </table>
+    <div align="center"><button type="button" class="btn btn-outline-success">发表评论</button></div>
+    <div>
+        <nav aria-label="...">
+            <ul class="pagination">
+            </ul>
+        </nav>
+
+    </div>
+    <!--add的弹出框-->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myModalLabel">新增</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="title">标题</label>
+                        <input type="text" name="txt_departmentname" class="form-control" id="title">
+                    </div>
+                    <div class="form-group">
+                        <label for="content">内容</label>
+                        <input type="text" name="txt_departmentname" class="form-control" id="content">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>
+                    <button type="button" id="mespublic" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>发布</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</body>
+<!--发布评论的弹出框-->
+<script type="text/javascript">
+    $(".btn-outline-success").click(function () {
+        $("#myModalLabel").text("新增");
+        $('#myModal').modal();
+    });
+</script>
+<!--评论的添加-->
+<script>
+    $("#mespublic").click(function () {
+        let mes={
+            "title":$("#title").val(),
+            "content":$("#content").val(),
+            "id":sessionStorage.getItem("userid"),
+            "type":sessionStorage.getItem("usertype")
+        };
+
+        $.ajax({
+           url:"/qiantai/mes/add",
+           data:mes,
+           dataType:"json",
+           type:"get",
+           async:false,
+           success:function (data) {
+               if (data.msg=="发表成功"){
+                   alert(data.msg);
+                   location.href="Message.html";
+               }
+               else{
+                   alert(data.msg);
+               }
+
+           }
+        });
+    })
+
+</script>
+</html>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzy.education_system.dao.TMessageDao">
+    <insert id="TMessageAdd">
+        insert into t_liuyan values(#{tMessage.id},#{tMessage.title},#{tMessage.content},#{tMessage.shijian},#{tMessage.user_id},#{tMessage.type})
+    </insert>
+    <select id="TMessageFindAll" resultType="com.lzy.education_system.domain.TMessage">
+        select * from t_liuyan order by id desc
+    </select>
+    <delete id="TMessageDel">
+        delete from t_liuyan where id= #{id}
+    </delete>
+</mapper>

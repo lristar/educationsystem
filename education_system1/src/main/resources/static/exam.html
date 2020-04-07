@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="EN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>统一建模语言测试题</title>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.css">
+
+    <style>
+        #exam{
+            width:800px;
+            height: 1000px;
+            margin: auto;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            // var page={
+            //     "pageNum":1,
+            //     "pageSize":4
+            // };
+            $.ajax({
+                type:"GET",
+                url:"/admin/problem/findshowall",
+                // data:page,
+                dataType:"json",
+                contentType:"application/json;charset=utf-8",
+                async:true,
+                success:function(data) {
+                    var obj = eval(data);
+                    var olsingle=$('<ol></ol>');
+                    var olMultuple=$('<ol></ol>');
+                    var oltrueorfalse=$('<ol></ol>');
+                    //通过以下记录题型的数量
+                    var numbersingle=1;
+                    var numbermultuple=1;
+                    var numberjudge=1;
+
+                    $(obj).each(function (index) {
+                        var val = obj[index];
+                        if(val.type==1){
+
+                            var li=$('<li></li>');
+                            li.append('<p id="singlechoice'+numbersingle+'">'+val.name+'</p>'
+                            +'<div>'+'<input type="radio" name="singlechoice'+numbersingle+'" value="A" id="'+val.id+'">'+"(A)"+val.xuanxianga+'</div>'
+                            +'<div>'+'<input type="radio" name="singlechoice'+numbersingle+'" value="B" id="'+val.id+'">'+"(B)"+val.xuanxiangb+'</div>'
+                            +'<div>'+'<input type="radio" name="singlechoice'+numbersingle+'" value="C" id="'+val.id+'">'+"(C)"+val.xuanxiangc+'</div>'
+                            +'<div>'+'<input type="radio" name="singlechoice'+numbersingle+'" value="D" id="'+val.id+'">'+"(D)"+val.xuanxiangd+'</div>');
+                            olsingle.append(li);
+                            numbersingle=numbersingle+1;
+                        }
+                        if(val.type==2){
+                            var li=$('<li></li>');
+                            li.append('<p id="Muchoice'+numbermultuple+'">'+val.name+'</p>'
+                                +'<div>'+'<input type="checkbox" name="Muchoice'+numbermultuple+'" value="A" id="'+val.id+'">'+"(A)"+val.xuanxianga+'</div>'
+                                +'<div>'+'<input type="checkbox" name="Muchoice'+numbermultuple+'" value="B" id="'+val.id+'">'+"(B)"+val.xuanxiangb+'</div>'
+                                +'<div>'+'<input type="checkbox" name="Muchoice'+numbermultuple+'" value="C" id="'+val.id+'">'+"(C)"+val.xuanxiangc+'</div>'
+                                +'<div>'+'<input type="checkbox" name="Muchoice'+numbermultuple+'" value="D" id="'+val.id+'">'+"(D)"+val.xuanxiangd+'</div>');
+                            olMultuple.append(li);
+                            numbermultuple=numbermultuple+1;
+                        }
+                        if(val.type==3){
+                            var li=$('<li></li>');
+                            li.append('<p id="judgechoice'+numberjudge+'">'+val.name+'</p>'
+                                +'<div>'+'<input type="radio" name="judgechoice'+numberjudge+'" value="T" id="'+val.id+'">'+"(A)"+val.xuanxianga+'</div>'
+                                +'<div>'+'<input type="radio" name="judgechoice'+numberjudge+'" value="F" id="'+val.id+'">'+"(B)"+val.xuanxiangb+'</div>');
+                            oltrueorfalse.append(li);
+                            numberjudge=numberjudge+1;
+                        }
+
+                });
+                    $("#singleChoice ol").replaceWith(olsingle);
+                    $("#MultupleChoice ol").replaceWith(olMultuple);
+                    $("#true-falseChoice ol").replaceWith(oltrueorfalse);
+                }
+            });
+
+        });
+    </script>
+</head>
+
+<body>
+<div class="container">
+<div id="exam">
+<form>
+    <header>
+        <center><h1>小试牛刀</h1></center>
+    </header>
+
+    <section class="panel panel-default">
+        <div class="panel-heading"><h1>二、选择题（每题10分，共40分）</h1></div>
+        <div class="panel-body" id="singleChoice">
+            <ol>
+
+            </ol>
+        </div>
+    </section>
+
+    <section class="panel panel-default">
+        <div class="panel-heading"><h1>三、多选题（每题20分，共40分）</h1></div>
+        <div class="panel-body"  id="MultupleChoice">
+            <ol>
+
+            </ol>
+        </div>
+    </section>
+
+    <section class="panel panel-default">
+        <div class="panel-heading"><h1>四、判断题（每题10分，共20分）</h1></div>
+        <div class="panel-body" id="true-falseChoice">
+            <ol>
+
+            </ol>
+        </div>
+    </section>
+
+
+
+    <section>
+        <center>
+            <button type="submit" class="btn btn-info" id="daansubmit" onclick="exam()">计算分数</button>
+        </center>
+    </section>
+</form>
+</div>
+    <!--//查看公告内容的弹出框-->
+    <div class="modal fade" id="showcontentmyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="showcontentmyModalLabel">所有内容</h4>
+                </div>
+                <div class="modal-content" id="showcontent11">
+                    <div>
+                        dsafdsfdsfsdfdsfsdfsdafsdfsdfdsafsdf
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!--        -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+</div>
+</body>
+<script type="text/javascript">
+    function exam(){
+        //获得对应问题的答案和问题的id
+        debugger;
+        var singlenumber=0;
+        var munumber=0;
+        var judgenumber=0;
+       $.ajax({
+           url:"/tea/exam/shownumber",
+           dataType:"json",
+           type:"get",
+           async:false,
+           success:function (data) {
+               //从数据库中获得单选多选和判断题的数目
+               // alert(data.singlenumber);
+              singlenumber=data.singlenumber;
+
+               munumber=data.munumber;
+               judgenumber=data.judgenumber;
+           }
+       });
+        //单选题的选中的答案和id
+        var singlevalues=[];
+        var singleids=[];
+        for(var i=0;i<singlenumber;i++){
+            singlevalues[i]=$("input[name='singlechoice"+(i+1)+"']:checked").val();
+            singleids[i]=$("input[name='singlechoice"+(i+1)+"']").prop("id");
+        }
+        //数组转成字符串
+        var singlevaluestr=singlevalues.toString();
+        var singleidstr=singleids.toString();
+        //判断题的答案和id
+        var judgevalues=[];
+        var judgeids=[];
+        for(var j=0;j<judgenumber;j++){
+            judgevalues[j]=$("input[name='judgechoice"+(j+1)+"']:checked").val();
+            judgeids[j]=$("input[name='judgechoice"+(j+1)+"']").prop("id");
+
+        }
+        var judgevaluestr=judgevalues.toString();
+        var judgeidstr=judgeids.toString();
+
+        //多选题的答案和id
+        var Muvalues=[];
+        var Muids=[];
+
+        for(var k=0;k<munumber;k++){
+            Muids[k]=$("input[name='Muchoice"+(k+1)+"']").prop("id");
+            // $("input[name='Muchoice"+(k+1)+"']:checked").each(function () {
+            //         Muvalues[k]=Muvalues[k]+$("input[name='Muchoice"+(k+1)+"']:checked").val();
+            //
+            //
+            // });
+            var chenked=$("input[name='Muchoice"+(k+1)+"']:checked").val([]);//此为重点
+            var names = "";
+            for(var i=0;i<chenked.length;i++){
+                names += chenked[i].value ;
+            }
+            Muvalues[k]=names;
+
+            // var $box = $("[name='Muchoice"+(k+1)+"']:checked"),
+            //     val = '';
+            //
+            // $.each($box,function (i,v){
+            //     val += i > 0 ? +v.value : v.value;
+            // });
+            // Muvalues[k]=val;
+            // $("#Muids[k]").val
+        }
+        var Muvaluestr=Muvalues.toString();
+        var Muidstr=Muids.toString();
+
+       var exammsg={
+            "singlevalues":singlevaluestr,
+            "singleids":singleidstr,
+            "Muvalues":Muvaluestr,
+            "Muids":Muidstr,
+            "judgevalues":judgevaluestr,
+            "judgeids":judgeidstr
+       };
+        // alert("singlevalues ： " + singlevaluestr + ",singleids ：" + singleidstr
+        //      + ",Muvalues :" + Muvaluestr + ",Muids:" + Muidstr + ",judgevalues：" +judgevaluestr + ",judgeids:" + judgeidstr);
+
+        $.ajax({
+           url:"/stu/exam/final",
+            data:exammsg,
+            type:"get",
+            dataType:"json",
+            async:false,
+
+            success:function (data) {
+
+               alert("单选题答案："+data.singledaan+",多选题答案："+data.mudaan+",判断题答案："+data.judgedaan
+               +"---总得分:"+data.totalscore);
+                // $("#showcontentmyModalLabel").text("所有内容");
+                // $('#showcontentmyModal').modal();
+                // //  console.log(contentall);
+                // var tdiv=$('<div></div>');
+                //
+                // tdiv.append('<div class="modal-content">'+data.totalscore+'</div>');
+                // $("#showcontent11 div").replaceWith(tdiv);
+               //循环给出单选题答案
+              // for(var i=0;i<singlenumber;i++){
+              //     $("#singlechoice"+(i+1)+"").append(data.singledaan);
+              //
+              // }
+              // //循环给出多选题答案
+              //   for(var j=0;j<munumber;j++){
+              //       $("#MultupleChoice"+(j+1)+"").append(data.mudaan);
+              //
+              //   }
+              // //循环给出判断题答案
+              // for(var k=0;k<judgenumber;k++){
+              //     $("#judgechoice"+(k+1)+"").append(data.judgedaan);
+              //
+              // }
+              //    $("#daansubmit").html("'</p>'+data.totalscore+'</p>'");
+            }
+        });
+
+    }
+
+</script>
+</html>

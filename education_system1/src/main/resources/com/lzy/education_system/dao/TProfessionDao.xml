@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzy.education_system.dao.TProfessionDao">
+    <insert id="TProfessionAdd">
+        insert into t_zhuanye
+        values (#{tProfession.id},#{tProfession.name},#{tProfession.jieshao},#{tProfession.del})
+    </insert>
+    <update id="TProfessionDel">
+        update t_zhuanye set del='yes'where id=#{id}
+    </update>
+    <select id="TProfessionFindbyid" resultType="com.lzy.education_system.domain.TProfession">
+        select * from t_zhuanye where id= #{id}
+    </select>
+    <select id="TProfessionFindAll" resultType="com.lzy.education_system.domain.TProfession">
+        select * from t_zhuanye where del='no'
+    </select>
+    <select id="TProfessionFindbyname" resultType="com.lzy.education_system.domain.TProfession">
+        select * from t_zhuanye
+        where name= #{name}
+    </select>
+
+</mapper>

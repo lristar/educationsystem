@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        .demo{
+            float: left;
+        }
+        .demo1{
+            width: 1200px;
+            height: 1000px;
+            margin: 0px auto;
+            
+        }
+        .demo2{
+            width: 301px;
+            height: 230px;
+            border: 1px solid black;
+            margin-bottom: 5px;
+            
+        }
+        .demo3{
+            width: 301px;
+            height: 211px;
+            border: 1px solid black;
+            margin-bottom: 5px;
+           
+        }
+        .demo4{
+            width: 301px;
+            height: 264px;
+            border: 1px solid black;
+            margin-bottom: 5px;
+            
+        }
+        .demo5{
+            float: left;
+            width: 890px;
+            height: 310px;
+            border: 1px solid black;
+            margin-left: 5px;
+            margin-bottom: 5px;
+        }
+        .demo6{
+            float: left;
+            width: 890px;
+            height: 400px;
+            border: 1px solid black;
+            margin-left: 5px;
+            margin-bottom: 5px;
+        }
+        .header{
+            width: 100%;
+            height: 30px;
+            background-color: #e0e9ee;
+        }
+        .header strong{
+            margin-left: 30px;
+            line-height: 30px;
+            color: #28296c;
+        }
+        .zybody{
+        	height: 210px;
+        }
+        .zliaobody{
+        	height:300px;
+        }
+        form .sr{
+            margin-left: 40px;
+        }
+        form .xz{
+            margin-left: 25px;
+        }
+        form div{
+            margin-top: 15px;
+        }
+        td,th{
+            height: 30px;
+            width: 222px;
+        }
+        tr{
+            text-align: center;
+        }
+        th{
+            background-color: #faf9f4;
+        }
+        #login{
+            margin: 40px 40px 40px 40px;
+        }
+        .dropdown-toggle{
+            margin-top: 15px;
+            border: none;
+        }
+
+    </style> 
+<!--判断是否登录过-->
+
+    <script type="text/javascript">
+        // $(function(){
+        //    sessionStorage.getItem("")
+        // });
+        $(function () {
+            $.ajax({
+               url:"/qiantai/islogin",
+               type:"get",
+               datatype:"json",
+               async:true,
+                success:function(data){
+                   if(data.username!="null"){
+                       let p=$('<p></p>');
+                       sessionStorage.setItem("username",data.username);
+                       sessionStorage.setItem("usertype",data.usertype);
+                       p.append("欢迎"+data.username+"进入网站"+'<button onclick="exit()">退出</button>');
+                       $("#login p").replaceWith(p);
+                   }
+                }
+            });
+        });
+        // 作业分页显示
+        $(function () {
+            var page={
+                "pageNum":1,
+                "pageSize":4
+            };
+            $.ajax({
+                url:"/admin/task/findshow",
+                type:"get",
+                data:page,
+                dataType:"json",
+                contentType:"application/json;charset=utf-8",
+                async:true,
+                success:function (data) {
+                    var pageInfo=eval(data);
+                    var tbody=$('<tbody></tbody>');
+                    var form=$('<form method="post" enctype="multipart/form-data"></form>');
+                    $(pageInfo.list).each(function (index) {
+                        var val=pageInfo.list[index];
+                        var tr=$('<tr></tr>');
+                        tr.append('<td>'+val.mingcheng+'</td>'+'<td>'+val.fujianYuanshiming+'</td>'+'<td>'+val.shijian+'</td>'+'<td>'+'<button type="button" class="btn btn-outline-warning" onclick="download('+val.id+')">下载</button>'+'</td>');
+                       tbody.append(tr);
+                    });
+                    $("#taskshow tbody").replaceWith(tbody);
+                }
+            });
+        });
+        function download(id) {
+            var type=sessionStorage.getItem("usertype");
+            if(type!="1"&&type!="2") {alert("请登录后在下载")}
+            else{
+                var zuoyeid = id;
+                var url = "";
+                if (zuoyeid != null) {
+                    url = "/task/download";
+                    location.href = url + '?id=' + zuoyeid;
+                }
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var page={
+                "pageNum":1,
+                "pageSize":4
+            };
+            $.ajax({
+                url:"/admin/announcement/findshow",
+                type:"get",
+                data:page,
+                dataType:"json",
+                contentType:"application/json;charset=utf-8",
+                async:true,
+                success:function (data) {
+                    var pageInfo=eval(data);
+                    var tbody=$('<tbody></tbody>');
+                    $(pageInfo.list).each(function (index) {
+                        var val=pageInfo.list[index];
+                        var tr=$('<tr></tr>');
+                        tr.append('<td>'+'<button type="button" class="btn btn-light" onclick="look(&quot;'+ val.content+'&quot;)">'+val.title+'</button>'+'</td>'+'<td>'+val.shijian+'</td>');
+                        tbody.append(tr);
+                    });
+                    $("#gonggao tbody").replaceWith(tbody);
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="demo1">
+        <!--导航栏-->
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+              <!-- Brand and toggle get grouped for better mobile display -->
+              <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">首页</a>
+              </div>
+          
+              <!-- Collect the nav links, forms, and other content for toggling -->
+              <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                  <li>
+                      <div class="btn-group">
+                          <button type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="teapublic">
+                              老师操作
+                          </button>
+                          <div class="dropdown-menu">
+                              <div>
+                              <a class="dropdown-item" href="javascript:void(0);" id="publictask">发布作业</a><br/>
+                              <a class="dropdown-item" href="javascript:void(0);" id="editexam">编辑小测</a><br/>
+                              <a class="dropdown-item" href="javascript:void(0);" id="publicvedio">发布视频</a><br/>
+                              <a class="dropdown-item" href="javascript:void(0);" id="teashowtask">查看作业</a><br>
+                              <a class="dropdown-item" href="javascript:void(0);" id="teashowvedio">查看视频</a><br>
+                              <a class="dropdown-item" href="javascript:void(0);" id="teashowexam">查看试题</a>
+                          </div>
+                          </div>
+                      </div>
+
+                  </li>
+                  <li><a href="Vedioshow.html">观看视频</a></li>
+                  <li><a href="exam.html">在线自测</a></li>
+                  <li><a href="#" onclick="showmessage()">共勉互助板</a></li>
+                  <li><a href="adminlogin.html">后台管理</a></li>
+                </ul>
+               
+              </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+        <div class="demo">
+            <div class="demo2">
+                <div class="header">
+                    <strong>用户登录</strong>
+                </div>
+                <div id="login">
+                    <p>您还未登录,请<button id="logining">登录</button></p>
+                </div>
+            </div>
+            <div class="demo3">
+                <div class="header">
+                    <strong>公告</strong>
+                </div>
+                <table id="gonggao">
+               <tbody>
+
+               </tbody>
+                </table>
+            </div>
+            <div class="demo4">
+                <div class="header">
+                    <strong>学习网站</strong>
+                </div>
+                <div>
+                    <a href="https://www.imooc.com/" target="_blank"><strong style="font-size:large">慕课网--- --- --- --- --- --- --- --- --- ---</strong></a><br/><br/>
+                    <a href="https://leetcode-cn.com/" target="_blank"><strong style="font-size:large">LeetCode中文网--- --- --- --- --- --- -</strong></a><br/><br/>
+                    <a href="https://www.codecademy.cn/" target="_blank"><strong style="font-size:large">Codecademy--- --- --- --- --- --- --- --</strong></a><br/><br/>
+                    <a>--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---</a><br/><br/>
+                    <a href="https://github.com/" target="_blank"><strong style="font-size:large">github--- --- --- --- --- --- --- --- --- ---</strong></a>
+                </div>
+            </div>
+            
+        </div>
+        <div class="right">
+        <div class="demo5">
+            <div class="header">
+                <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;最新作业</strong>
+            </div>
+            <div class="zybody">
+            <table id="taskshow">
+                <thead>
+                <tr>
+                    <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名称</th>
+                    <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;附件</th>
+                    <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上传时间</th>
+                    <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;下载</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+            </div>
+            <div>
+           <nav aria-label="...">
+  <ul class="pagination">
+    <li class="page-item disabled">
+      <a class="page-link" href="#" tabindex="-1" aria-disabled="true"><<</a>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+    <li class="page-item active" aria-current="page">
+      <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item">
+      <a class="page-link" href="#">>></a>
+    </li>
+  </ul>
+</nav>
+
+        </div>
+        </div> 
+       
+        <div class="demo6">
+            <div class="header">
+                <strong>最新资料</strong>
+               </div>
+                 <div class="zliaobody">
+                <table>
+                <tr>
+                    <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名称</th>
+                    <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;附件</th>
+                    <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上传时间</th>
+                    <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;下载</th>
+                </tr>
+                <tr>
+                    <td>第一章作业</td>
+                    <td>作业doc</td>
+                    <td>2020-02-02 20：20</td>
+                    <td><span href="#"/><span style="color: red;">down</span>
+                    </td>
+                </tr>
+            </table>
+            </div>
+           
+          <div>
+            	
+         <nav aria-label="...">
+  <ul class="pagination">
+    <li class="page-item disabled">
+      <a class="page-link" href="#" tabindex="-1" aria-disabled="true"><<</a>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+    <li class="page-item active" aria-current="page">
+      <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item">
+      <a class="page-link" href="#">>></a>
+    </li>
+  </ul>
+</nav>
+
+        </div>
+    </div>
+        </div>
+        <!--登录弹出框-->
+        <div class="modal fade" id="myModallogin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title" id="myModalLabellogin">登录</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label for="username">账号</label>
+                            <input type="text" name="txt_departmentname" class="form-control" id="username">
+                        </div>
+                        <div class="form-group">
+                            <label for="userpassword">密码</label>
+                            <input type="text" name="txt_parentdepartment" class="form-control" id="userpassword">
+                        </div>
+                        <div class="form-group">
+                            <label for="stuortea">角色</label>
+                            <select class="custom-select" id="stuortea">
+                                <option value="2">学生</option>
+                                <option value="1">老师</option>
+                            </select>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>
+                        <button type="button" id="userloginin" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>登录</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--//查看公告内容的弹出框-->
+        <div class="modal fade" id="showcontentmyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title" id="showcontentmyModalLabel">所有内容</h4>
+                    </div>
+                    <div class="modal-content" id="showcontent11">
+                        <div>
+                            dsafdsfdsfsdfdsfsdfsdafsdfsdfdsafsdf
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--发布作业弹出框-->
+        <div class="modal fade" id="myModalpublictask" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form action="/tea/task/upload" enctype="multipart/form-data" method="post">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title" id="myModalLabelpublictask">作业发布</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label for="tasktitle">作业描述</label>
+                            <input type="text" name="tasktitle" class="form-control" id="tasktitle">
+                        </div>
+                        <div class="form-group">
+                            <label for="taskupload">作业</label>
+                            <input type="file" name="taskupload" class="form-control" id="taskupload">
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>
+                        <input type="submit" value="上传">
+                    </div>
+                  </form>
+                </div>
+            </div>
+        </div>
+        <!--发布视频弹出框-->
+        <div class="modal fade" id="myModalpublicvedio" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form action="/tea/vedio/upload" enctype="multipart/form-data" method="post">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title" id="myModalLabelpublicvedio">视频发布</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label for="vediotitle">视频描述</label>
+                            <input type="text" name="vediotitle" class="form-control" id="vediotitle">
+                        </div>
+                        <div class="form-group">
+                            <label for="vediocontent">视频内容</label>
+                            <input type="text" name="vediotitle" class="form-control" id="vediocontent">
+                        </div>
+                        <div class="form-group">
+                            <label for="vedioupload">视频</label>
+                            <input type="file" name="vedioupload" class="form-control" id="vedioupload">
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>
+                        <input type="submit" value="上传">
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!--测试编辑弹出框-->
+        <div class="modal fade" id="myModalpublicexam" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myModalLabelpublicexam">视频发布</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-control">
+                    <select class="form-control" id="examtype">
+                        <option value="1">单选题</option>
+                        <option value="2">多选题</option>
+                        <option value="3">判断题</option>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="examtitle">题目描述</label>
+                        <input type="text" name="txt_departmentname" class="form-control" id="examtitle">
+                    </div>
+                    <div class="form-group">
+                        <label for="examselectA">A</label>
+                        <input type="text" name="txt_departmentname" class="form-control" id="examselectA">
+                    </div>
+                    <div class="form-group">
+                        <label for="examselectB">B</label>
+                        <input type="text" name="txt_departmentname" class="form-control" id="examselectB">
+                    </div>
+                    <div class="form-group">
+                        <label for="examselectC">C</label>
+                        <input type="text" name="txt_departmentname" class="form-control" id="examselectC">
+                    </div>
+                    <div class="form-group">
+                        <label for="examselectD">D</label>
+                        <input type="text" name="txt_departmentname" class="form-control" id="examselectD">
+                    </div>
+                    <div class="form-group">
+                        <label for="examfenshu">分数</label>
+                        <input type="text" name="txt_departmentname" class="form-control" id="examfenshu">
+                    </div>
+                    <div class="form-group">
+                        <label for="examdaan">答案</label>
+                        <input type="text" name="txt_departmentname" class="form-control" id="examdaan">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>
+                    <button type="button" id="publicexamsubmit" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>上传</button>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!--老师查看和删除作业弹出框-->
+        <div class="modal fade" id="myModalshowtask" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title" id="myModalLabelshowtask">作业列表</h4>
+                    </div>
+                    <div id="teashowtaskanddel">
+                    <div class="modal-body">
+
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--老师查看和删除视频弹出框-->
+        <div class="modal fade" id="myModalshowvedio" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title" id="myModalLabelshowvedio">视频列表</h4>
+                    </div>
+                    <div id="teashowvedioanddel">
+                        <div class="modal-body">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--老师查看和删除试题弹出框-->
+        <div class="modal fade" id="myModalshowexam" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title" id="myModalLabelshowexam">试题列表</h4>
+
+                    </div>
+                    <div id="teashowexamanddel">
+                        <div class="modal-body">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+    </div>
+
+</body>
+
+<!--老师发布按钮的许可-->
+<script>
+    $("#teapublic").click(function(){
+        var type=sessionStorage.getItem('usertype');
+        var div=$('<div class="dropdown-menu"></div>');
+        div.append('<a class="dropdown-item" href="javascript:void(0);" id="publictask" onclick="publictack()">发布作业</a><br/>');
+        div.append('<a class="dropdown-item" href="javascript:void(0);" id="editexam" onclick="editexam()">编辑小测</a><br/>');
+        div.append('<a class="dropdown-item" href="javascript:void(0);" id="publicvedio" onclick="publicvedio()">发布视频</a><br/>');
+        div.append('<a class="dropdown-item" href="javascript:void(0);" id="teashowtask" onclick="teashowtask()">查看作业</a><br/>');
+        div.append('<a class="dropdown-item" href="javascript:void(0);" id="teashowvedio" onclick="teashowvedio()">查看视频</a><br/>');
+        div.append('<a class="dropdown-item" href="javascript:void(0);" id="teashowexam" onclick="teashowexam()">查看试题</a><br/>');
+        if(type=="2"){
+            $(".btn-group div div").remove();
+            alert("学生点击无效");
+        }
+        else{
+        // <!--<span class="dropdown-item-text">Dropdown item text</span><br/>-->
+        //     <!--<a class="dropdown-item" href="javascript:void(0);" id="publictask">发布作业</a><br/>-->
+        //         <!--<a class="dropdown-item" href="javascript:void(0);" id="editexam">编辑小测</a><br/>-->
+        //         <!--<a class="dropdown-item" href="javascript:void(0);" id="publicvedio">发布视频</a>-->
+        if(type=="1"){
+            $(".btn-group div").replaceWith(div);
+        }
+        else{
+            $(".btn-group div div").remove();
+            alert("请先登录");
+        }
+        }
+    })
+</script>
+<script type="text/javascript">
+    // 老师编辑问题
+    $("#publicexamsubmit").click(function () {
+        var examelement={
+            "type":$("#examtype").val(),
+            "examtitle":$("#examtitle").val(),
+            "examselectA":$("#examselectA").val(),
+            "examselectB":$("#examselectB").val(),
+            "examselectC":$("#examselectC").val(),
+            "examselectD":$("#examselectD").val(),
+            "examfenshu":$("#examfenshu").val(),
+            "examdaan":$("#examdaan").val()
+        };
+        $.ajax({
+           url:"/tea/exam/add",
+           type:"get",
+           data:examelement,
+           dataType:"json",
+           contentType:"application/json;charset=utf-8",
+           success:function(data){
+               if(data.msg=="添加成功"){
+                   alert(data.msg);
+               }
+               else{
+                   alert(data.msg);
+               }
+
+           }
+        });
+    })
+</script>
+
+<!--老师查看和删除作业-->
+<script type="text/javascript">
+    $(function () {
+        var page={
+            "pageNum":1,
+            "pageSize":4
+        };
+        $.ajax({
+            url:"/admin/task/findshow",
+            type:"get",
+            data:page,
+            dataType:"json",
+            contentType:"application/json;charset=utf-8",
+            async:true,
+            success:function (data) {
+                var pageInfo=eval(data);
+                var div=$('<div class="modal-body"></div>');
+                $(pageInfo.list).each(function (index) {
+                    var val=pageInfo.list[index];
+                    var tr=$('<tr></tr>');
+                    tr.append('<td>'+val.mingcheng+'</td>'+'<td>'+val.shijian+'</td>'+'<td>' +'<button type="button" class="btn btn-outline-warning" onclick="taskdel('+val.id+')">delete</button>'+'</td>');
+                    div.append(tr);
+                });
+                $("#teashowtaskanddel div").replaceWith(div);
+            }
+        });
+    });
+
+    function taskdel(id){
+        var taskid=id;
+        var url="";
+        if(taskid!=null){
+            url="/admin/task/del";
+        }
+        $.ajax({
+            url:url,
+            type:"get",
+            data:{id:taskid},
+            dataType:"json",
+            success:function(data){
+                if(data.msg==="删除成功"){
+                    alert(data.msg);
+                }
+                else{
+                    alert(data.msg);
+                }
+            }
+
+
+        });
+    }
+</script>
+<!--老师查看和删除视频-->
+<script type="text/javascript">
+    $(function () {
+        var page={
+            "pageNum":1,
+            "pageSize":4
+        };
+        $.ajax({
+            url:"/admin/vedio/findshow",
+            type:"get",
+            data:page,
+            dataType:"json",
+            contentType:"application/json;charset=utf-8",
+            async:true,
+            success:function (data) {
+                var pageInfo=eval(data);
+                var div=$('<div class="modal-body"></div>');
+                $(pageInfo.list).each(function (index) {
+                    var val=pageInfo.list[index];
+                    var tr=$('<tr></tr>');
+                    tr.append('<td>'+val.title+'</td>'+'<td>'+val.content+'</td>'+'<td>'+val.shijian+'</td>'+'<td>' +'<button type="button" class="btn btn-outline-warning" onclick="vediodel('+val.id+')">delete</button>'+'</td>');
+                    div.append(tr);
+                });
+                $("#teashowvedioanddel div").replaceWith(div);
+            }
+        });
+    });
+
+    function vediodel(id){
+        var taskid=id;
+        var url="";
+        if(taskid!=null){
+            url="/admin/vedio/del";
+        }
+        $.ajax({
+            url:url,
+            type:"get",
+            data:{id:taskid},
+            dataType:"json",
+            success:function(data){
+                if(data.msg==="删除成功"){
+                    alert(data.msg);
+                }
+                else{
+                    alert(data.msg);
+                }
+            }
+
+
+        });
+    }
+</script>
+<!--老师查看和删除作业-->
+<script type="text/javascript">
+    $(function () {
+
+        $.ajax({
+            url:"/admin/problem/findshowall",
+            type:"get",
+            dataType:"json",
+            contentType:"application/json;charset=utf-8",
+            async:true,
+            success:function (data) {
+                var pageInfo=eval(data);
+                var div=$('<div class="modal-body"></div>');
+                $(pageInfo).each(function (index) {
+                    var val=pageInfo[index];
+                    var tr=$('<tr></tr>');
+                    tr.append('<td>'+val.name+'</td>'+'<td>'+val.xuanxianga+'</td>'+'<td>'+val.xuanxiangb+'</td>'+'<td>'+val.xuanxiangc+'</td>'+'<td>'+val.xuanxiangd+'</td>'+'<td>'+val.daan+'</td>'+'<td>' +'<button type="button" class="btn btn-outline-warning" onclick="examdel('+val.id+')">delete</button>'+'</td>');
+                    div.append(tr);
+                });
+                $("#teashowexamanddel div").replaceWith(div);
+            }
+        });
+    });
+
+    function examdel(id){
+        var taskid=id;
+        var url="";
+        if(taskid!=null){
+            url="/admin/problem/del";
+        }
+        $.ajax({
+            url:url,
+            type:"get",
+            data:{id:taskid},
+            dataType:"json",
+            success:function(data){
+                if(data.msg==="删除成功"){
+                    alert(data.msg);
+                }
+                else{
+                    alert(data.msg);
+                }
+            }
+
+
+        });
+    }
+</script>
+
+
+<!--老师发布中的作业查看模块弹出-->
+<script type="text/javascript">
+    function teashowtask(){
+        $("#myModalLabelshowtask").text("新增");
+        $('#myModalshowtask').modal();
+    }
+
+</script>
+<!--老师发布中的视频查看模块弹出-->
+<script type="text/javascript">
+    function teashowvedio(){
+        $("#myModalLabelshowvedio").text("新增");
+        $('#myModalshowvedio').modal();
+    }
+
+</script>
+<!--老师发布中的试题查看模块弹出-->
+<script type="text/javascript">
+    function teashowexam(){
+        $("#myModalLabelshowexam").text("新增");
+        $('#myModalshowexam').modal();
+    }
+
+</script>
+<!--老师发布中的作业发布模块弹出-->
+<script type="text/javascript">
+    function editexam(){
+        $("#myModalLabelpublicexam").text("新增");
+        $('#myModalpublicexam').modal();
+    }
+
+</script>
+<!--老师编辑试题模块-->
+<script type="text/javascript">
+    function publicvedio(){
+        $("#myModalLabelpublicvedio").text("新增");
+        $('#myModalpublicvedio').modal();
+    }
+</script>
+<!--老师发布中的视频发布模块弹出-->
+<script type="text/javascript">
+    function publictack(){
+        $("#myModalLabelpublictask").text("新增");
+        $('#myModalpublictask').modal();
+    }
+</script>
+<!--登录模块弹出-->
+<script type="text/javascript">
+    $("#logining").click(function () {
+        $("#myModalLabellogin").text("新增");
+        $('#myModallogin').modal();
+    })
+</script>
+<!--登录切换-->
+<script type="text/javascript">
+
+    $("#userloginin").click(function () {
+        var url=null;
+        var requestMsg = {
+            "username":$("#username").val(),
+            "userpassword":$("#userpassword").val()
+        };
+        //区分老师学生的变量，1为老师，2为同学
+        var stuortea= $("#stuortea").val();
+        if(stuortea==1){
+            url="/tea/login"
+        }
+        else
+        {
+            url="/stu/login";
+        }
+        $.ajax({
+            url:url,
+            data:requestMsg,
+            type: 'GET',
+            dataType:'json',
+            success:function(data){
+                if(data.msg=="登录成功"){
+                    var p=$('<p></p>');
+                    // div.append('<div style="margin-top:auto">'+"欢迎"+user.name+'"进入网站"+</div>');
+                    p.append("欢迎"+data.username+"进入网站"+'<button onclick="exit()">退出</button>');
+                    $("#login p").replaceWith(p);
+                    sessionStorage.setItem("username",data.username);
+                    sessionStorage.setItem("usertype",data.usertype);
+                    sessionStorage.setItem("userid",data.userid);
+                }
+
+                else{
+                    alert(data.msg);
+                }
+            }
+        });
+    });
+    function exit(){
+        // sessionStorage.setItem("type","3");
+        // sessionStorage.setItem("name",null);
+        $.ajax({
+            url:"/qiantai/userexit",
+            dataType:"json",
+            type:"get",
+            async:false,
+            success:function (data) {
+              if(data.msg=="退出成功"){
+                  location.href="zhuyou.html";
+                  sessionStorage.clear();
+              }
+              else{
+
+              }
+
+            }
+
+
+        });
+
+    }
+
+</script>
+<!--留言板判断是否进入-->
+<script>
+    function showmessage(){
+        let type=sessionStorage.getItem("usertype");
+        if(type=="1"||type=="2")
+        {
+            location.href="Message.html";
+
+        }
+        else{
+            alert("您还未登录，请登录");
+        }
+    }
+</script>
+<!--查看公告内容按钮的弹出框-->
+<script type="text/javascript">
+    function look(content){
+        var contentall=content;
+        $("#showcontentmyModalLabel").text("所有内容");
+        $('#showcontentmyModal').modal();
+        //  console.log(contentall);
+        var tdiv=$('<div></div>');
+        tdiv.append('<div class="modal-content">'+contentall+'</div>');
+        $("#showcontent11 div").replaceWith(tdiv);
+    }
+
+
+</script>
+
+</html>

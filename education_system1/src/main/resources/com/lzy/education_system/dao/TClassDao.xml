@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzy.education_system.dao.TClassDao">
+    <insert id="TClassAdd">
+        insert into t_banji values(#{tClass.id},#{tClass.name},#{tClass.zhuanye_id},#{tClass.del})
+    </insert>
+    <update id="TClassDel">
+        update t_banji set del='yes' where id= #{id}
+    </update>
+    <select id="TClassOrderByzhuanye_id" resultType="com.lzy.education_system.domain.TClass">
+        select * from t_banji where del='no' order by zhuanye_id
+    </select>
+    <select id="TClassFindbyid" resultType="com.lzy.education_system.domain.TClass">
+        select * from t_banji where id= #{id}
+    </select>
+    <select id="TClassAll" resultType="com.lzy.education_system.domain.TClass">
+        select * from t_banji where del='no'
+    </select>
+    <select id="TClassFindbyName" resultType="com.lzy.education_system.domain.TClass">
+        select * from t_banji where name= #{name}
+    </select>
+</mapper>

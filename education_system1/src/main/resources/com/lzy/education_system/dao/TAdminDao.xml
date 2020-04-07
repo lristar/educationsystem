@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzy.education_system.dao.TAdminDao">
+    <select id="TadminLogin" resultType="com.lzy.education_system.domain.TAdmin">
+        select * from t_admin where userName= #{userName} and userPw= #{userPw}
+    </select>
+    <select id="TadminAll" resultType="com.lzy.education_system.domain.TAdmin">
+        select * from t_admin
+    </select>
+    <insert id="TadminAdd">
+        insert into t_admin(userName,userPw) value (#{userName},#{userPw})
+    </insert>
+    <delete id="TadminDel" >
+        delete from t_admin where userId= #{userId}
+    </delete>
+    <update id="TAdminPwEdit">
+        update t_admin set userPw= #{userPwNew} where userName=#{userName}
+
+    </update>
+    <select id="TadminFindone" resultType="com.lzy.education_system.domain.TAdmin"></select>
+
+</mapper>

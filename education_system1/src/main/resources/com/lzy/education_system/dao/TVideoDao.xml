@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzy.education_system.dao.TVideoDao">
+    <insert id="TVideoAdd">
+        insert into t_shipin values(#{tVideo.id},#{tVideo.title},#{tVideo.content},
+        #{tVideo.fujian},#{tVideo.fujianYuanshiming},#{tVideo.shijian},#{tVideo.del})
+    </insert>
+    <update id="TVideoDel">
+        update t_shipin set del='yes' where id= #{id}
+    </update>
+
+    <select id="TVideoFindbyid" resultType="com.lzy.education_system.domain.TVideo">
+        select * from t_shipin where id=#{id}
+    </select>
+    <select id="TVideoFindAll" resultType="com.lzy.education_system.domain.TVideo">
+        select * from t_shipin where del='no'
+    </select>
+</mapper>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+  <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/jquery.validate.min.js"></script>
+    <style>
+        #stupage{
+            width: 800px;
+            height: 700px;
+            float:right;
+            padding-right: 250px;
+            padding-top: 20px;
+             margin-top: 60px;
+        }
+        .zhuxian{
+            width: 1200px;
+            margin: 0 auto;
+        }
+        .biaoti{
+            float: left;
+            width: 298px;
+            height: 1000px;
+        }
+    </style>
+    <script>
+        $(function(){
+            $(".biaoti").load("zuobiankuang.html");
+        })
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var page={
+                "pageNum":1,
+                "pageSize":4
+            };
+            $.ajax({
+                type:"GET",
+                data:page,
+                url:"/admin/stu/findshow",
+                dataType:"json",
+                contentType:"application/json;charset=utf-8",
+                async:true,
+                success:function(data) {
+                    var obj = eval(data);
+                    var tbody = $('<tbody></tbody>');
+                    $(obj.list).each(function (index) {
+                        var val = obj.list[index];
+                        var tr = $('<tr></tr>');
+                        tr.append('<td>' + val.xuehao + '</td>' + '<td>' + val.name + '</td>' + '<td>' + val.sex + '</td>' + '<td>' + val.age + '</td>' + '<td>' + val.banji + '</td>'+ '<td>' + val.loginpw + '</td>'+ '<td>' +val.ruxueshijian + '</td>'+ '<td>' +'<button type="button" class="btn btn-outline-warning" onclick="del(taskshow)">delete</button>'+'</td>');
+                        tbody.append(tr);
+                    });
+                    $('#stupage tbody').replaceWith(tbody);
+                }
+            });
+
+        });
+        function del(id) {
+            var stuid=id;
+            var url="";
+            if(stuid!=null) {
+                url = "/admin/stu/del";
+
+            }
+            $.ajax({
+                url:url,
+                type:"get",
+                data:{id:stuid},
+                dataType:'json',
+                success:function(data){
+                    if(data.msg==="删除成功"){
+                        alert(data.msg);
+                        location.href="adminstu.html";
+                    }
+                    else{
+                        alert(data.msg);
+                        location.href="adminstu.html";
+                    }
+
+                }
+            });
+
+        }
+    </script>
+</head>
+
+<body>
+    <div class="zhuxian">
+
+        <!--引入左标题-->
+        <div class="biaoti"></div>
+
+        <div id="stupage">
+            <table class="table table-bordered" style="width: 700px">
+                <thead>
+                <tr>
+                    <th scope="col">学号</th>
+                    <th scope="col">性名</th>
+                    <th scope="col">性别</th>
+                    <th scope="col">年龄</th>
+                    <th scope="col">班级</th>
+                    <th scope="col">登录密码</th>
+                    <th scope="col">入学年份</th>
+                     <th width="50px" scope="col">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div><button type="button" class="btn-outline-success">Add</button></div>
+            <div>
+                <nav aria-label="...">
+  <ul class="pagination">
+    <li><a href="#">&laquo;</a></li>
+    <li><a href="#">1</a></li>
+    <li><a href="#">2</a></li>
+    <li><a href="#">3</a></li>
+    <li><a href="#">4</a></li>
+    <li><a href="#">5</a></li>
+    <li><a href="#">&raquo;</a></li>
+</ul>
+</nav>
+
+            </div>
+            <!--add弹出框-->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title" id="myModalLabel">新增</h4>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="form-group">
+                                <label for="xuehao">学号</label>
+                                <input type="text" name="txt_departmentname" class="form-control" id="xuehao" placeholder="学号">
+                            </div>
+                            <div class="form-group">
+                                <label for="name">姓名</label>
+                                <input type="text" name="txt_parentdepartment" class="form-control" id="name" placeholder="姓名">
+                            </div>
+                            <div class="form-group">
+                                <label for="sex">性别</label>
+                                <input type="text" name="txt_departmentlevel" class="form-control" id="sex" placeholder="性别">
+                            </div>
+                            <div class="form-group">
+                                <label for="age">年龄</label>
+                                <input type="text" name="txt_statu" class="form-control" id="age" placeholder="年龄">
+                            </div>
+                            <div class="form-group">
+                                <label for="banji">班级</label>
+                                <input type="text" name="txt_statu" class="form-control" id="banji" placeholder="年级+专业+班级">
+                            </div>
+                            <div class="form-group">
+                                <label for="loginpw">登录密码</label>
+                                <input type="text" name="txt_statu" class="form-control" id="loginpw" placeholder="登录密码">
+                            </div>
+                            <div class="form-group">
+                                <label for="ruxueshijian">入学时间</label>
+                                <input type="text" name="txt_statu" class="form-control" id="ruxueshijian" placeholder="年-月-日">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>
+                            <button type="button" id="btn_submit" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>保存</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    $(".btn-outline-success").click(function () {
+        $("#myModalLabel").text("新增");
+        $('#myModal').modal();
+    });
+    $("#btn_submit").click(function(){
+        var addmes = {
+            "xuehao":$("#xuehao").val(),
+            "name":$("#name").val(),
+            "sex":$("#sex").val(),
+            "ages":$("#age").val(),
+            "banji":$("#banji").val(),
+            "loginpw":$("#loginpw").val(),
+            "ruxueshijian":$("#ruxueshijian").val()
+        };
+
+        $.ajax({
+            url:"/admin/stu/add",
+            data:addmes,
+            type:'get',
+            dataType:'json',
+            contentType:"application/json;charset-utf-8",
+            success:function(data){
+                if(data.msg==="添加成功"){
+                    alert(data.msg);
+                    location.href="adminstu.html";
+                }
+
+                else{
+                    alert(data.msg);
+                }
+            }
+        });
+    })
+</script>
+</html>

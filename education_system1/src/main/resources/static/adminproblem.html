@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/jquery.validate.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <style>
+        #adminstu{
+            width: 800px;
+            height: 700px;
+            float:right;
+            padding-right: 250px;
+            padding-top: 20px;
+             margin-top: 60px;
+        }
+        .zhuxian{
+            width: 1200px;
+            margin: 0 auto;
+        }
+        .biaoti{
+            float: left;
+            width: 298px;
+            height: 1000px;
+        }
+    </style>
+    <script>
+        $(function(){
+            $(".biaoti").load("zuobiankuang.html");
+        })
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $.ajax({
+                url:"/admin/problem/findshowall",
+                type:"get",
+                dataType:"json",
+                contentType:"application/json;charset=utf-8",
+                async:true,
+                success:function (data) {
+                    var pageInfo=eval(data);
+                    var tbody=$('<tbody></tbody>');
+                    $(pageInfo).each(function (index) {
+                        var val=pageInfo[index];
+                        var tr=$('<tr></tr>');
+                        tr.append('<td>'+val.name+'</td>'+'<td>'+val.xuanxianga+'</td>'+'<td>'+val.xuanxiangb+'</td>'+'<td>'+val.xuanxiangc+'</td>'+'<td>'+val.xuanxiangd+'</td>'+'<td>'+val.daan+'</td>'+'<td>'+val.fenshu+'</td>'+'<td>' +'<button type="button" class="btn btn-outline-warning" onclick="del('+val.id+')">delete</button>'+'</td>');
+                        tbody.append(tr);
+                    });
+                    $("#problemshow tbody").replaceWith(tbody);
+                }
+            });
+        });
+        function del(id){
+            var problemid=id;
+            var url="";
+            if(problemid!=null){
+                url="/admin/problem/del";
+            }
+            $.ajax({
+                url:url,
+                type:"get",
+                data:{id:problemid},
+                dataType:"json",
+                success:function(data){
+                    if(data.msg==="删除成功"){
+                        alert(data.msg);
+                        location.href="adminproblem.html";
+                    }
+                    else{
+                        alert(data.msg);
+                    }
+                }
+
+
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <div class="zhuxian">
+
+        <!--引入左标题-->
+        <div class="biaoti"></div>
+
+        <div id="adminstu">
+            <table class="table table-bordered" id="problemshow" style="width: 700px">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">题目</th>
+                    <th scope="col">选项A</th>
+                    <th scope="col">选项B</th>
+                    <th scope="col">选项C</th>
+                    <th scope="col">选项D</th>
+                    <th scope="col">答案</th>
+                    <th scope="col">分数</th>
+                    <th width="50px" scope="col">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+            <div><button type="button" class="btn btn-outline-success">Add</button></div>
+
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzy.education_system.dao.TTeaDao">
+    <select id="TTealogin" resultType="com.lzy.education_system.domain.TTea">
+        select *from t_tea where  bianhao=#{bianhao} and loginpw=#{loginpw}
+    </select>
+    <insert id="TTeaAdd">
+        insert into t_tea values(#{teacher.id},#{teacher.bianhao},#{teacher.name},#{teacher.sex},#{teacher.age},#{teacher.del},#{teacher.loginpw})
+    </insert>
+    <update id="TTeaDel">
+        update t_tea set del='yes' where id=#{id}
+    </update>
+    <select id="TTeaAll" resultType="com.lzy.education_system.domain.TTea">
+        select * from t_tea where del='no'
+    </select>
+    <select id="TTeaFindbybianhao" resultType="com.lzy.education_system.domain.TTea">
+        select * from t_tea where del='no' and bianhao= #{bianhao}
+    </select>
+    <select id="TTeaFindbyId" resultType="com.lzy.education_system.domain.TTea">
+        select *from t_tea where id=#{id}
+    </select>
+</mapper>

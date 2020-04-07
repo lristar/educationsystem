@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="css/bootstrap.min.css">
+</head>
+<script src="js/jquery-1.11.3.min.js"></script>
+<script src="js/jquery.validate.min.js"></script>
+
+<body>
+<div class="container">
+    <form>
+    用户名：<input type="text" name="username" id="username">
+    密码：<input type="password" name="userpassword" id="userpassword">
+    <select id="stuortea" name="stuortea">
+    <option value="2">学生</option>
+    <option value="1">老师</option>
+    </select>
+        <a href="javascript:void(0);" id="loginin">登录</a>
+    </form>
+    </div>
+<script type="text/javascript">
+    $("#loginin").click(function () {
+        var url=null;
+        var requestMsg = {
+            "username":$("#username").val(),
+            "userpassword":$("#userpassword").val()
+        };
+        //区分老师学生的变量，1为老师，2为同学
+        console.log(requestMsg);
+        var stuortea= $("#stuortea").val();
+        if(stuortea==1){
+            url="/tea/login";
+        }
+        else
+        {
+            url="/stu/login";
+        }
+        $.ajax({
+            url:url,
+            data:requestMsg,
+            type: 'GET',
+            dataType: 'json',
+            success:function(data){
+                if(data.msg=="登录成功"){
+                    window.location.href= "zhuyou.html";
+                }
+
+                else{
+                    alert(data.msg);
+                }
+            }
+        });
+    })
+
+</script>
+</body>
+</html>

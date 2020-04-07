@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzy.education_system.dao.TDocDao">
+    <insert id="TDocAdd">
+        insert into t_doc values( #{tDoc.id},#{tDoc.title},#{tDoc.content},#{tDoc.fujian},
+        #{tDoc.fujianYuanshiming},#{tDoc.shijian},#{tDoc.del})
+    </insert>
+    <delete id="TDocDel">
+        delete from t_doc where id= #{id}
+    </delete>
+    <select id="TDocFindbyid" resultType="com.lzy.education_system.domain.TDoc">
+        select * from t_doc where id= #{id}
+    </select>
+    <select id="TDocFindAll" resultType="com.lzy.education_system.domain.TDoc">
+        select * from t_doc where del='no'
+    </select>
+
+</mapper>

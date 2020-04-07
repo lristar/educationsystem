@@ -1,0 +1,28 @@
+#  服务器
+  server:
+    port: 9090
+
+
+    #tomcat:
+    #  accept-count: 1000
+    #  max-threads: 800
+    #  min-spare-threads: 100
+    servlet:
+      session:
+        timeout: 14400
+
+#pagehelper 分页插件
+  pagehelper:
+    helper-dialect: mysql
+    reasonable: true
+    support-methods-arguments: true
+    params: countSql
+#数据库连接
+  spring:
+    datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: "jdbc:mysql:///db_wljx?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai"
+      password: root
+      username: root
+    main:
+      allow-bean-definition-overriding: true
